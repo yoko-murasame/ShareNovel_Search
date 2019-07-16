@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>测试页面</title>
+<link href="https://cdn.bootcss.com/twitter-bootstrap/3.4.0/css/bootstrap.css" rel="stylesheet">
+<script src="https://cdn.bootcss.com/jquery/3.4.0/jquery.js"></script>
+<script src="https://cdn.bootcss.com/twitter-bootstrap/3.4.0/js/bootstrap.js"></script>
+<script type="text/javascript">
+	$(function(){
+	
+		$("#btnSearch").click(function(){
+			var str = $("#searchStr").val();
+			$("#searchStr").val("");
+			$.ajax({
+				url: "http://localhost/findByKeywordByPage",
+				data: {
+					keyword:str,
+					pageSize:5,
+					page:1
+				},
+				type: "POST",
+				success: function(data) {
+					console.log(data);
+					if(data.status == 200){
+						for(var i=0;i<data.data.list.length;i++){
+							var novel = data.data.list[i];
+							var tr=$("<tr></tr>");
+							var td1 = $("<td>"+ novel.novelTitle +"</td>");
+							var td2 = $("<td>"+ novel.novelAuthor +"</td>");
+							var td3 = $("<td>"+ novel.novelSummary +"</td>");
+							$(tr).append(td1);
+							$(tr).append(td2);
+							$(tr).append(td3);
+							
+							$("#searchTable").append(tr);
+						}
+					}else{
+						console.log(data.msg);
+					}
+				}
+			});		
+			
+		})
+		
+	})
+</script>
+</head>
+<body>
+测试页面
+<input class="input" id="searchStr" type="text" placeholder="请输入搜索条件"/><input class="btn btn-default" id="btnSearch" type="button" value="提交"/>
+<table class="table" id="searchTable" style="border:1px solid #ccc;">
+
+</table>
+</body>
+</html>
